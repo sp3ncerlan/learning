@@ -1,6 +1,3 @@
-from itertools import permutations
-import math
-
 arr = [3, 5, 1]
 k = 3
 
