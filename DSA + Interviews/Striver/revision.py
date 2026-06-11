@@ -1,43 +1,32 @@
 from itertools import permutations
 import math
 
-arr = [1, 2, 3, 4, 5]
-d = 2
+arr = [3,5,1]
+k = 3
 
-def days_for_weight(arr, weight):
-    days = 1
-    current_weight = 0
-    for w in arr:
-        if current_weight + w > weight:
-            days += 1
-            current_weight = w
-        else:
-            current_weight += w
+def stations_placed(arr, chosen_distance):
+    stations = 0
     
-    return days
     
-def func(arr, d):
+    return splits
+    
+def func(arr, k):
     left, right = max(arr), sum(arr)
     
     optimal = -1
     while left <= right:
-        weight = (left + right) // 2
+        chosen_distance = (left + right) // 2
         
-        if days_for_weight(arr, weight) <= d:
-            optimal = weight
-            right = weight - 1
+        if stations_placed(arr, chosen_distance) <= k:
+            optimal = chosen_distance
+            right = chosen_distance - 1
         else:
-            left = weight + 1
-    
+            left = chosen_distance + 1
+            
     return optimal
 
-print(func(arr, d))
+print(func(arr, k))
 
 """
-BF:
-- count each freq in a hashmap and then find the one that appears once (freq == 1)
-- o(n), o(n)
 
-OPTIMAL:
-- 
 """
