@@ -1,31 +1,16 @@
 from itertools import permutations
+from collections import defaultdict
 import math
 
-arr = [3,5,1]
-k = 3
+# matrix = [[1, 4, 7, 11], [2, 5, 8, 12], [3, 6, 9, 16], [10, 13, 14, 17]]
+arr = [1, 2, 3, 4, 5]
+k = 4
+# k = 
 
-def stations_placed(arr, chosen_distance):
-    stations = 0
+def func(arr):
     
-    
-    return splits
-    
-def func(arr, k):
-    left, right = max(arr), sum(arr)
-    
-    optimal = -1
-    while left <= right:
-        chosen_distance = (left + right) // 2
-        
-        if stations_placed(arr, chosen_distance) <= k:
-            optimal = chosen_distance
-            right = chosen_distance - 1
-        else:
-            left = chosen_distance + 1
-            
-    return optimal
 
-print(func(arr, k))
+print(func(arr))
 
 """
 
