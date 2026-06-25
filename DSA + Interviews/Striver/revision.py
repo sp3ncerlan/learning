@@ -1,8 +1,19 @@
 arr = [4, 7, 9, 10]
-k = 1
+k = 4
 
 def func(arr, k):
+    left, right = 0, len(arr) - 1
     
+    while left <= right:
+        check = (left + right) // 2
+        diff = arr[check] - (check + 1)
+        
+        if diff <= k:
+            left = check + 1
+        else:
+            right = check - 1
+            
+    return left + k
 
 print(func(arr, k))
 
