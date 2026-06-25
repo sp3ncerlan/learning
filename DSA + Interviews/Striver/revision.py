@@ -1,3 +1,14 @@
+from itertools import permutations
+from collections import defaultdict
+import math
+import bisect
+
+# matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
+# arr1 = [1, 2]
+# arr2 = [3, 4]
+# k =
+# s = " amazing coding skills "
+# t = "bar"
 arr = [4, 7, 9, 10]
 k = 4
 
@@ -8,19 +19,16 @@ def func(arr, k):
         check = (left + right) // 2
         diff = arr[check] - (check + 1)
         
-        if diff <= k:
+        if diff < k:
             left = check + 1
         else:
             right = check - 1
-            
+    
     return left + k
 
 print(func(arr, k))
 
 """
-BF:
-- every time we come across a number that is <= to the target, we add one since it cannot possibly be the missing number
-
 OPTIMAL:
 - binary search to find the current diff between the number that should be there and the number that is actually there
 - using the difference
