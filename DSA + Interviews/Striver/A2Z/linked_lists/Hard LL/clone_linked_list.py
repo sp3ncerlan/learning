@@ -14,7 +14,7 @@ class Node:
 # node in between the original nodes
 def insertCopyInBetween(head):
     curr = head
-    while curr and curr.next:
+    while curr:
         next = curr.next
         
         copy = Node(curr.data)
@@ -31,7 +31,11 @@ def connectRandomPointers(head):
     
     while real:
         clone = real.next
-        clone.next = real.next.next
+        
+        if real.random:
+            clone.random = real.random.next
+        
+        real = clone.next
     
 # Function to retrieve the
 # deep copy of the linked list
@@ -45,14 +49,17 @@ def getDeepCopyList(head):
         res.next = temp.next
         res = res.next
         
-        temp.next = temp.next.next
+        temp.next = res.next
         temp = temp.next
         
     return dummy.next
 
 # Function to clone the linked list
 def cloneLL(head):
+    insertCopyInBetween(head)
+    connectRandomPointers(head)
     
+    return getDeepCopyList(head)
 
 # Function to print the cloned linked list
 def printClonedLinkedList(head):

@@ -3,37 +3,41 @@ from collections import defaultdict
 import math
 import bisect
 
-# matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
+matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
 # arr1 = [1, 2]
 # arr2 = [3, 4]
 # k =
-# s = " amazing coding skills "
+# s = "a car"
 # t = "bar"
-arr = [4, 7, 9, 10]
-k = 4
+# arr = [1, 2, 3, 4, 5]
+# k = 4
 
-def func(arr, k):
-    left, right = 0, len(arr) - 1
+def get_count(row, median):
+    return bisect.bisect_right(row, median)
+
+def func(matrix):
+    low, high = min(row[0] for row in matrix), max(row[-1] for row in matrix)
     
-    while left <= right:
-        check = (left + right) // 2
-        diff = arr[check] - (check + 1)
+    target = (len(matrix) * len(matrix[0])) // 2
+    
+    while low <= high:
+        median = (low + high) // 2
         
-        if diff < k:
-            left = check + 1
+        count = 0
+        for row in matrix:
+            count += get_count(row, median)
+        
+        if count <= target:
+            low = median + 1
         else:
-            right = check - 1
-    
-    return left + k
+            high = median - 1
 
-print(func(arr, k))
+    return low
+
+print(func(matrix))
 
 """
 OPTIMAL:
-- binary search to find the current diff between the number that should be there and the number that is actually there
-- using the difference
-    - if the diff is <= k, it means that the number is there are less missing numbers than needed
-        - we'll check right to increase the number of missing numbers possible
-- once the left and right cross, the answer is between the right and left pointers
-- it would be right + (number needed (k) - number of missing numbers on the left)
+- we binary search on the min and max numbers in the matrix, then using that compare each line binary searching for the count
+- we can get the count by doing bisect_right, which gives us the index where it should go. count would be that number
 """
