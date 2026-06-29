@@ -39,17 +39,7 @@ class Solution:
         
         
         
-    def reverse(self, head):
-        prev = None
-        curr = head
-        
-        while curr:
-            next = curr.next
-            curr.next = prev
-            prev = curr
-            curr = next
-            
-        return prev    
+    def mergeSort()
         
 # Main function
 if __name__ == "__main__":
