@@ -3,41 +3,45 @@ from collections import defaultdict
 import math
 import bisect
 
-matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
+# matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
 # arr1 = [1, 2]
 # arr2 = [3, 4]
 # k =
-# s = "a car"
+s = " -12345"
 # t = "bar"
 # arr = [1, 2, 3, 4, 5]
 # k = 4
+x = 2.0000
+n = 10
+# MOD = 10**9 + 7
 
-def get_count(row, median):
-    return bisect.bisect_right(row, median)
-
-def func(matrix):
-    low, high = min(row[0] for row in matrix), max(row[-1] for row in matrix)
+def helper(x, n):
+    if n == 0:
+        return 1.0
     
-    target = (len(matrix) * len(matrix[0])) // 2
+    if n == 1:
+        return x
     
-    while low <= high:
-        median = (low + high) // 2
-        
-        count = 0
-        for row in matrix:
-            count += get_count(row, median)
-        
-        if count <= target:
-            low = median + 1
-        else:
-            high = median - 1
+    result = 0
+    if n % 2 == 0:
+        result = (result + helper(x * x, n // 2))
+    else:
+        result = (result + (x * helper(x, n - 1)))
+    
+    return result
 
-    return low
+def func(x, n):
+    if n < 0:
+        return 1.0 / helper(x, -n)
 
-print(func(matrix))
+    return helper(x, n)
+    
+print(func(x, n))
 
 """
 OPTIMAL:
-- we binary search on the min and max numbers in the matrix, then using that compare each line binary searching for the count
-- we can get the count by doing bisect_right, which gives us the index where it should go. count would be that number
+- if we just multiplied the numbers one by one, it would be o(n)
+- we can do it faster in o(logn)
+    - every time the power is even, we can divide it in half and then make the base number multiplied
+    - if its odd, we want to make it even, so we just subtract one and multiply the result
 """

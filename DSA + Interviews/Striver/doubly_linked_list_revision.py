@@ -1,71 +1,63 @@
-# Definition of doubly linked list:
+# Definition for singly-linked list node
 class ListNode:
-    def __init__(self, val=0, next=None, prev=None):
+    def __init__(self, val):
         self.val = val
-        self.next = next
-        self.prev = prev
+        self.next = None
+
+class Solution:
+    # Function to reverse nodes in k-sized groups
+    def reverseKGroup(self, head, k):
+        dummy = ListNode(-1)
+        dummy.next = head
         
-# Helper function to build a DLL from a Python list
-def create_dll(lst):
-    if not lst:
-        return None
-    head = ListNode(lst[0])
-    curr = head
-    for val in lst[1:]:
-        new_node = ListNode(val)
-        curr.next = new_node
-        new_node.prev = curr
-        curr = new_node
-    return head
-
-# Helper function to convert DLL back to Python list to verify structure
-def dll_to_list(head):
-    lst = []
-    curr = head
-    while curr:
-        lst.append(curr.val)
-        # Optional: Verify integrity of forward/backward links
-        if curr.next and curr.next.prev != curr:
-            print(f"Warning: Broken link at node {curr.val}")
-        curr = curr.next
-    return lst
-
-def deleteAllOccurrences(head, target):
-    curr = head
-    while curr:
-        if curr.val == target:
-            next_node = curr.next
-            if curr == head:
-                head = head.next
-                if head:
-                    head.prev = None
-            else:
-                curr.prev.next = curr.next
-                if curr.next:
-                    curr.next.prev = curr.prev
+        groupPrev = dummy
+        
+        while True:
+            kth = self.getKthNode(groupPrev, k)
+            if not kth:
+                break
             
-        curr = curr.next
+            groupNext = kth.next
             
-    return head
+            # reverse
+            prev = groupNext
+            curr = groupPrev.next
+            
+            for _ in range(k):
+                next = curr.next
+                curr.next = prev
+                prev = curr
+                curr = next
+            
+            temp = groupPrev.next
+            groupPrev.next = kth
+            groupPrev = temp
+            
+        return dummy.next
+        
+    # Helper function to find the k-th node from current
+    def getKthNode(self, curr, k):
+        while curr and k > 0:
+            curr = curr.next
+            k -= 1
+            
+        return curr
 
-# --- Test Cases ---
+# Driver code
+def printList(node):
+    while node:
+        print(node.val, end=" ")
+        node = node.next
 
-# Test Case 1: Example from description
-head1 = create_dll([1, 2, 3, 1, 4])
-res1 = deleteAllOccurrences(head1, 1)
-print("Test 1:", dll_to_list(res1))  # Expected: [2, 3, 4]
+# Creating linked list: 1->2->3->4->5
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(4)
+head.next.next.next.next = ListNode(5)
 
-# Test Case 2: Removing all elements
-head2 = create_dll([7, 7, 7, 7])
-res2 = deleteAllOccurrences(head2, 7)
-print("Test 2:", dll_to_list(res2))  # Expected: []
-
-# Test Case 3: Target not present
-head3 = create_dll([1, 2, 3])
-res3 = deleteAllOccurrences(head3, 5)
-print("Test 3:", dll_to_list(res3))  # Expected: [1, 2, 3]
-
-# Test Case 4: Empty list
-head4 = create_dll([])
-res4 = deleteAllOccurrences(head4, 1)
-print("Test 4:", dll_to_list(res4))  # Expected: []
+k = 2
+sol = Solution()
+result = sol.reverseKGroup(head, k)
+printList(result)
+print("")

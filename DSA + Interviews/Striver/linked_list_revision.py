@@ -1,61 +1,101 @@
-# Node class representing a single digit in the linked list
-class Node:
-    def __init__(self, value):
-        self.data = value
-        self.next = None
+class ListNode:
+    def __init__(self, val=0, next=None, child=None):
+        self.val = val
+        self.next = next
+        self.child = child
 
-# LinkedList class to manage node-level operations
-class LinkedList:
-    # function to insert digit at the end
-    def append(self, head, value):
-        new_node = Node(value)
-        if not head:
-            return new_node
-        current = head
-        while current.next:
-            current = current.next
-        current.next = new_node
-        return head
-
-    # Function to print the list
-    def printList(self, head):
-        current = head
-        while current:
-            print(current.data, end='')
-            current = current.next
-        print()
-
-# Solution class having the addOne logic 
 class Solution:
-    def palindrome(self, head):
-        slow, fast = head, head
+    ''' Merge the two linked lists in a particular
+     order based on the data value '''
+    def merge(self, list1, list2):
+        temp = current = ListNode(-1)
         
-        while fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
+        while list1 and list2:
+            if list1.val < list2.val:
+                current.child = list1
+                list1 = list1.child
+            else:
+                current.child = list2
+                list2 = list2.child
+                
+            current = current.child
             
-        second_head = self.reverse(slow)
-        first, second = head, second_head
+        if list1:
+            current.child = list1
+        else:
+            current.child = list2
+            
+        return temp.child
+
+    # Function to flatten a linked list with child pointers 
+    def flattenLinkedList(self, head):
+        if not head or not head.next:
+            return head
         
+        next_head = self.flattenLinkedList(head.next)
         
+        # merge
+        merged = self.merge(head, next_head)
         
-    def mergeSort()
+        head.next = None
         
-# Main function
+        return merged
+
+# Function to print the linked list
+def printLinkedList(head):
+    while head is not None:
+        print(head.val, end=" ")
+        head = head.child
+    print()
+
+# Function to print the linked list in a grid-like structure
+def printOriginalLinkedList(head, depth):
+    while head is not None:
+        print(head.val, end="")
+
+        ''' If child exists, recursively
+         print it with indentation '''
+        if head.child:
+            print(" -> ", end="")
+            printOriginalLinkedList(head.child, depth + 1)
+
+        # Add vertical bars for each level in the grid
+        if head.next:
+            print()
+            for i in range(depth):
+                print("| ", end="")
+        
+        head = head.next
+
 if __name__ == "__main__":
-    head = None
-    ll = LinkedList()
+# Corrected properly sorted driver code
+    head = ListNode(5)
+    head.child = ListNode(7)
+    head.child.child = ListNode(8)
+    head.child.child.child = ListNode(30)
+
+    head.next = ListNode(10)
+    head.next.child = ListNode(20)
+
+    head.next.next = ListNode(19)
+    head.next.next.child = ListNode(22)
+    head.next.next.child.child = ListNode(50)
+
+    head.next.next.next = ListNode(28)
+    head.next.next.next.child = ListNode(35)
+    head.next.next.next.child.child = ListNode(40)
+    head.next.next.next.child.child.child = ListNode(45)
+
+    # Print the original linked list structure
+    print("Original linked list:")
+    printOriginalLinkedList(head, 0)
+
+    # Creating an instance of Solution class
     sol = Solution()
-
-    # Example: Number 129 (1 -> 2 -> 9)
-    head = ll.append(head, 1)
-    head = ll.append(head, 2)
-    head = ll.append(head, 9)
-
-    print("Original Number: ", end='')
-    ll.printList(head)
-
-    head = sol.addOne(head)
-
-    print("After Adding One: ", end='')
-    ll.printList(head)
+    
+    # Function call to flatten the linked list
+    flattened = sol.flattenLinkedList(head)
+    
+    # Printing the flattened linked list
+    print("\nFlattened linked list: ", end="")
+    printLinkedList(flattened)
