@@ -24,7 +24,7 @@ class LinkedList:
             print(current.data, end='')
             current = current.next
         print()
-        
+
 # Solution class having the addOne logic 
 class Solution:
     def palindrome(self, head):

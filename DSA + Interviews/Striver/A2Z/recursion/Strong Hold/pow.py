@@ -1,17 +1,24 @@
-x = 2.0000
-n = 10
+x = 2
+n = -1
 
 def recurse(x, n):
     if n == 0:
-        return 1
+        return 1.0
     
     if n == 1:
         return x
-    
-    
+
+    # if even, divide n by 2 and multiply x by 2    
+    if n % 2 == 0:
+        return recurse(x * x, n / 2.0)
+    else:
+        return x * recurse(x, n - 1)
 
 def func(x, n):
-    
+    if n < 0:
+        return 1.0 / recurse(x, -n)
+        
+    return recurse(x, n)
 
 print(func(x, n))
 
