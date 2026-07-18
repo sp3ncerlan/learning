@@ -3,45 +3,50 @@ from collections import defaultdict
 import math
 import bisect
 
-# matrix = [[1, 4, 9], [2, 5, 6], [3, 8, 7]]
-# arr1 = [1, 2]
-# arr2 = [3, 4]
-# k =
-s = " -12345"
-# t = "bar"
-# arr = [1, 2, 3, 4, 5]
-# k = 4
-x = 2.0000
-n = 10
-# MOD = 10**9 + 7
+stack = []
+# N = 3
+# M = 2
+# E = 3
+# edges = [
+#   (0, 1),  
+#   (1, 2),
+#   (0, 2)
+# ]
 
-def helper(x, n):
-    if n == 0:
-        return 1.0
+def func(N, M, E, edges):
+    adj = {u: [] for u in range(N)}
+    for u, v in edges:
+        adj[u].append(v)
+        adj[v].append(u)
+        
+    color = [0] * N
     
-    if n == 1:
-        return x
+    def recurse(node):
+        if node == N:
+            return True
+        
+        for c in range(1, M + 1):
+            is_safe = True
+            for neighbor in adj[node]:
+                if color[neighbor] == c:
+                    is_safe = False
+                    break
+                
+            if is_safe:
+                color[node] = c
+                
+                if recurse(node + 1):
+                    return True
     
-    result = 0
-    if n % 2 == 0:
-        result = (result + helper(x * x, n // 2))
-    else:
-        result = (result + (x * helper(x, n - 1)))
+                color[node] = 0
+                
+        return False
     
-    return result
+    return 1 if recurse(0) else 0
 
-def func(x, n):
-    if n < 0:
-        return 1.0 / helper(x, -n)
-
-    return helper(x, n)
-    
-print(func(x, n))
+print(func(N, M, E, edges))
 
 """
 OPTIMAL:
-- if we just multiplied the numbers one by one, it would be o(n)
-- we can do it faster in o(logn)
-    - every time the power is even, we can divide it in half and then make the base number multiplied
-    - if its odd, we want to make it even, so we just subtract one and multiply the result
+- 
 """
