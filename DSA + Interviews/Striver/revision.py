@@ -1,32 +1,25 @@
-heights = [2, 1, 5, 6, 2, 3]
-N = 6
-
-def func(heights, N):
-    n = len(heights)
-    stack = []
-    largest = 0
-    
-    for i in range(n + 1):
-        current_height = heights[i] if i < n else 0
-        
-        while stack and (i == n or heights[stack[-1]] >= current_height):
-            height = heights[stack.pop()]
-            
-            if not stack:
-                width = i
-            else:
-                width = i - stack[-1] - 1
-            
-            largest = max(largest, height * width)
-            
-        stack.append(i)
-            
-    return largest
-
-print(func(heights, N))
+cardScore = [5, 4, 1, 8, 7, 1, 3]
+k = 3
 
 """
-- monotonically increasing stack
-- while the current number is smaller than the top of the stack
-    - we pop the top, then compare with the next top of the stack to calc max rectangle at this moment
+- can only take from front or back
+- try all combinations, (0, 3), (1, 2), (2, 1), (3, 0)
 """
+
+def func(cardScore, k):
+    if k > len(cardScore):
+        return 0
+
+    n = len(cardScore)
+    total = sum(cardScore[:k])
+    score = total
+
+    for i in range(k):
+        total -= cardScore[k - i - 1]
+        total += cardScore[n - i - 1]
+
+        score = max(score, total)
+
+    return score
+
+print(func(cardScore, k))
