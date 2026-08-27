@@ -1,7 +1,3 @@
-import heapq
-
-
-
 """
 Problem Statement: Find the validity of an input string s that only contains the letters '(', ')' and '*'. A string entered is legitimate if
 
