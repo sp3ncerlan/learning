@@ -1,83 +1,50 @@
-# Node class representing a single digit in the linked list
-class Node:
-    def __init__(self, value):
-        self.data = value
-        self.next = None
+import heapq
 
-# LinkedList class to manage node-level operations
-class LinkedList:
-    # function to insert digit at the end
-    def append(self, head, value):
-        new_node = Node(value)
-        if not head:
-            return new_node
-        current = head
-        while current.next:
-            current = current.next
-        current.next = new_node
-        return head
+# Definition for singly-linked list
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 
-    # Function to print the list
-    def printList(self, head):
-        current = head
-        while current:
-            print(current.data, end='')
-            current = current.next
-        print()
-
-# Solution class having the addOne logic 
 class Solution:
-    # function to reverse the linked list
-    def reverseList(self, node):
-        prev = None
-        curr = node
-        
-        while curr:
-            nxt = curr.next
-            curr.next = prev
-            prev = curr
-            curr = nxt
-            
-        return prev
+    # Function to merge k sorted linked lists using a min-heap
+    def mergeKLists(self, lists):
+        min_heap = []
 
-    # Function to add one to the number represented by the linked list
-    def addOne(self, head):
-        # 9 -> 2 -> 1
-        
-        head = self.reverseList(head)
-        curr = head
-        carry = 1
-        
-        while curr and carry:
-            total = curr.data + carry
-            carry = total // 10
-            
-            curr.data = (total % 10)
-            
-            if not curr.next and carry:
-                curr.next = Node(carry)
-                carry = 0
-                break
-            
+        temp = curr = ListNode(-1)
+
+        # prepopulate
+        for i, head in enumerate(lists):
+            if head:
+                heapq.heappush(min_heap, (head.val, i, head))
+
+        while min_heap:
+            _, index, node = heapq.heappop(min_heap)
+            curr.next = node
             curr = curr.next
-            
-        return self.reverseList(head)
 
-# Main function
+            if node.next:
+                heapq.heappush(min_heap, (node.next.val, index, node.next))
+
+        return temp.next
+
+# Driver code
 if __name__ == "__main__":
-    head = None
-    ll = LinkedList()
     sol = Solution()
 
-    # Example: Number 129 (1 -> 2 -> 9)
-    head = ll.append(head, 1)
-    head = ll.append(head, 2)
-    head = ll.append(head, 9)
+    # Creating three linked lists:
+    # list1: 1 -> 4 -> 5
+    # list2: 1 -> 3 -> 4
+    # list3: 2 -> 6
 
-    print("Original Number: ", end='')
-    ll.printList(head)
+    list1 = ListNode(1, ListNode(4, ListNode(5)))
+    list2 = ListNode(1, ListNode(3, ListNode(4)))
+    list3 = ListNode(2, ListNode(6))
 
-    head = sol.addOne(head)
+    lists = [list1, list2, list3]
+    result = sol.mergeKLists(lists)
 
-    print("After Adding One: ", end='')
-    ll.printList(head)
+    # Print the merged list
+    while result:
+        print(result.val, end=" ")
+        result = result.next
