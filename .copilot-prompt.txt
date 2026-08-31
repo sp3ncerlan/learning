@@ -1,0 +1,112 @@
+---
+name: striver-a2z
+description: "Create or update a Striver A2Z problem file in the DSA + Interviews project using the same style as the existing A2Z solutions: simple class-based structure, driver function, and problem comments. Maintains a strict educational/learning policy (no code fixes or suggestions)."
+---
+
+## Overview
+
+Use this skill when the user wants to start or work on a problem from the Striver A2Z roadmap in their local project, especially under:
+`/Users/spencerlan/Desktop/learning/DSA + Interviews/Striver/A2Z/...`
+
+This template should match the style already present in files like:
+- `binary_trees/hard/inorder_and_preorder.py`
+- `binary_trees/hard/root_to_node_path.py`
+
+## Step-by-Step Workflow
+
+1. **Map to the correct Striver path**:
+   - Use the exact topic and difficulty folder the user specifies.
+   - Examples:
+     - `binary_trees/hard`
+     - `arrays/medium`
+     - `graphs/easy`
+   - Create the folder structure if it does not exist.
+
+2. **Name the Python file**:
+   - Convert the problem title to a Python filename using lowercase letters and underscores.
+   - Example:
+     - `Construct A Binary Tree from Inorder and Preorder Traversal`
+     - -> `inorder_and_preorder.py`
+   - If a file with the same name already exists in the folder, reuse it.
+
+3. **Load the problem details**:
+   - Use the page or prompt the user provides to gather the problem statement, examples, and constraints.
+   - If needed, ask for a pasted problem statement or a link.
+   - For A2Z/Striver tasks, prefer the existing project style over a full LeetCode scaffold.
+
+4. **Initialize the file in A2Z style**:
+   - Keep the file simple and educational.
+   - Start with commented problem text if available.
+   - Use the project’s common structure:
+     - `class TreeNode:` or a node/struct definition as needed
+     - `class Solution:` with the required method name
+     - helper functions for printing or traversal if relevant
+     - `def main():` for the example driver
+   - Use plain Python, no heavy abstraction.
+   - Avoid adding new frameworks or advanced patterns.
+
+5. **Add example-driven local test setup**:
+   - Put the sample input in a `main()` function.
+   - Instantiate the solution class.
+   - Call the method with the example values.
+   - Print the output to match the file’s existing project style.
+   - If there are examples in the problem statement, use them as the local test values.
+
+6. **Run the file**:
+   - Execute the file with Python to verify it runs.
+   - Show the user the result.
+
+## Strict Learning Policy
+
+Since the user is learning to solve the problems:
+- **NEVER** edit the user’s implementation logic or suggest optimizations.
+- **NEVER** solve the problem for the user or provide code hints that reveal the answer.
+- Only adjust the file’s scaffolding, comments, imports, and local example runner.
+
+## Preferred file conventions
+
+- Match the style already in the project, especially:
+  - no `if __name__ == "__main__":` in the A2Z pattern unless it is already used in that folder
+  - prefer `def main():` when the file follows that style
+  - keep the solution skeleton minimal and readable
+- Prefer the Striver A2Z directory structure over a standalone `leetcode/` folder.
+- Use the exact folder the user points to; do not create a new workspace elsewhere.
+
+## Example target style
+
+```python
+# TreeNode structure
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
+
+# Solution class
+class Solution:
+    def buildTree(self, preorder, inorder):
+        # Create a hashmap to store inorder indices
+        pass
+
+# Inorder print
+def printInorder(root):
+    if not root:
+        return
+    printInorder(root.left)
+    print(root.val, end=" ")
+    printInorder(root.right)
+
+# Driver
+def main():
+    inorder = [9, 3, 15, 20, 7]
+    preorder = [3, 9, 20, 15, 7]
+
+    sol = Solution()
+    root = sol.buildTree(preorder, inorder)
+
+    print("Inorder of Unique Binary Tree Created:")
+    printInorder(root)
+    print()
+
+main()
+```
