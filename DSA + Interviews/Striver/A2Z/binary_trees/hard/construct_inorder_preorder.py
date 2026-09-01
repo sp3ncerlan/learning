@@ -9,11 +9,26 @@ class TreeNode:
 class Solution:
     def buildTree(self, preorder, inorder):
         mapping = {val: idx for idx, val in enumerate(inorder)} # { inorder node : index }
+        pre_index = 0
 
         # Helper function to build tree recursively
-        def build(preorder, inorder):
-            if len(inorder) == 1:
-                node = 
+        def build(inStart, inEnd):
+            nonlocal pre_index
+            if inStart > inEnd:
+                return None
+
+            root_val = preorder[pre_index]
+            root = TreeNode(root_val)
+            pre_index += 1
+
+            inRoot = mapping[root_val]
+
+            root.left = build(inStart, inRoot - 1)
+            root.right = build(inRoot + 1, inEnd)
+
+            return root
+
+        return build(0, len(inorder) - 1)
 
 # Inorder print
 def printInorder(root):

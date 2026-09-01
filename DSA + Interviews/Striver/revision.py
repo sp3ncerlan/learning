@@ -1,121 +1,98 @@
-# To implement a node in doubly linked 
-# list that will store data items
+# Vertical Order Traversal of a Binary Tree
+#
+# Given the root of a binary tree, return its vertical order traversal.
+# Nodes are grouped by their vertical column from left to right. Within
+# each column, nodes are ordered from top to bottom. If multiple nodes are
+# at the same position, order them by value.
+#
+# Example tree:
+#             1
+#           /   \
+#          2     3
+#         / \   / \
+#        4  10 9  10
+#         \
+#          5
+#           \
+#            6
+#
+# Expected output: [[4], [2, 5], [1, 9, 10, 6], [3], [10]]
+
+from collections import deque
+
+
+# Node structure
 class Node:
-    def __init__(self, _key, _value):
-        self.key = _key
-        self.value = _value
-        self.cnt = 1
-        self.next = None
-        self.prev = None
-
-
-# To implement the doubly linked list
-class List:
-    def __init__(self):
-        self.size = 0  # Size
-        self.head = Node(0, 0)  # Dummy head
-        self.tail = Node(0, 0)  # Dummy tail
-        self.head.next = self.tail
-        self.tail.prev = self.head
-
-    # Function to add node in front
-    def addFront(self, node):
-        temp = self.head.next
-        node.next = temp
-        node.prev = self.head
-        self.head.next = node
-        temp.prev = node
-        self.size += 1
-
-    # Function to remove node from the list
-    def removeNode(self, delnode):
-        prevNode = delnode.prev
-        nextNode = delnode.next
-        prevNode.next = nextNode
-        nextNode.prev = prevNode
-        self.size -= 1
-
+    def __init__(self, val):
+        self.data = val
+        self.left = None
+        self.right = None
 
 """
-- need a DLL inside a dict that keeps track of levels (dict represents frequency)
-- initially
-    - self.capacity to get size for resizing
-    - self.minFreq to instantly grab the least frequency used DLL
-    - self.freqList to save the DLLs
+- utilize two maps to group by { vertical_index: { row_index: [list of values] } 
 """
-# Class to implement LFU cache
-class LFUCache:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.minFreq = 0
-        self.nodeMap = {} # { key : node }
-        self.freqList = {} # { freq : DLL }
+# Solution class
+class Solution:
+    def findVertical(self, root):
+        # Group nodes by column, then order them by row and value.
+        mapping = {} # { vertical_index: { row_index: [list of values] }
+        queue = deque([(root, 0)])
+        row = 0
 
-    # Method to update frequency of data-items
-    def updateFreqListMap(self, node):
-        # check if the item we move is the last one in the DLL, then we need to update minFreq
-        # but only if the current DLL is the minFreq + this is the last node in the DLL
+        while queue:
+            level_size = len(queue)
+            for _ in range(level_size):
+                node, v_index = queue.popleft()
 
-        current_dll = self.freqList[node.cnt]
-        current_dll.removeNode(node)
+                if v_index not in mapping:
+                    mapping[v_index] = {}
 
-        if node.cnt == self.minFreq and current_dll.size == 0:
-            self.minFreq += 1
+                if row not in mapping[v_index]:
+                    mapping[v_index][row] = []
 
-        # change freq
-        node.cnt += 1
+                mapping[v_index][row].append(node.data)
 
-        if node.cnt not in self.freqList:
-            self.freqList[node.cnt] = List()
+                if node.left:
+                    queue.append((node.left, v_index - 1))
+                if node.right:
+                    queue.append((node.right, v_index + 1))
 
-        self.freqList[node.cnt].addFront(node)
+            row += 1
 
-    # Method to get the value of key from LFU cache
-    def get(self, key):
-        if key in self.nodeMap:
-            node = self.nodeMap[key]
-            self.updateFreqListMap(node)
-            return node.value
-        else:
-            return -1
+        ans = []
+        for _, row_dict in sorted(mapping.items()):
+            column = []
+            for _, values in sorted(row_dict.items()):
+                column.extend(sorted(values))
+            ans.append(column)
 
-    def put(self, key, value):
-        if self.capacity == 0: return
+        return ans
 
-        if key in self.nodeMap:
-            node = self.nodeMap[key]
-            node.value = value
-            self.updateFreqListMap(node)
-            return
+# Helper function to print the result
+def printResult(result):
+    if result:
+        for column in result:
+            print(" ".join(map(str, column)))
+    print()
 
-        # remove LFU if over capacity
-        if len(self.nodeMap) == self.capacity:
-            lfu_node = self.freqList[self.minFreq].tail.prev
-            self.freqList[self.minFreq].removeNode(lfu_node)
-            del self.nodeMap[lfu_node.key]
 
-        new_node = Node(key, value)
-        self.minFreq = 1
+# Driver
+def main():
+    root = Node(1)
+    root.left = Node(2)
+    root.left.left = Node(4)
+    root.left.right = Node(10)
+    root.left.left.right = Node(5)
+    root.left.left.right.right = Node(6)
+    root.right = Node(3)
+    root.right.right = Node(10)
+    root.right.left = Node(9)
 
-        if 1 not in self.freqList:
-            self.freqList[1] = List()
+    solution = Solution()
+    result = solution.findVertical(root)
 
-        self.freqList[1].addFront(new_node)
-        self.nodeMap[key] = new_node
+    print("Vertical Traversal:")
+    printResult(result)
 
-# LFU Cache
-cache = LFUCache(2)
 
-# [(1 : 1), (2 : 2), (3, 3)
-
-# Queries
-cache.put(1, 1)
-cache.put(2, 2)
-print(cache.get(1), end=" ")
-cache.put(3, 3)
-print(cache.get(2), end=" ")
-print(cache.get(3), end=" ")
-cache.put(4, 4)
-print(cache.get(1), end=" ")
-print(cache.get(3), end=" ")
-print(cache.get(4), end=" ")
+main()
